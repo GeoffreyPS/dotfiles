@@ -1,0 +1,8 @@
+Color: #7f7f7f (Black) formerly #202020
+Color: #b01e1e (Red) formerly #981b1b
+Color: #70a56f (Green)
+Color: #da8548 (Yellow / Orange)
+Color: #7846b5 (Blue / Violet)
+Color: #ff5b66 (Magenta / Pink)
+Color: #7ac1ff (Cyan / Blue)
+Color: #aaaaaa (White / Grey)
