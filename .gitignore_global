@@ -1,0 +1,10 @@
+### Emacs
+\#*\#
+.\#*
+
+### OSX
+*.DS_Store
+._*
+
+### VS Code
+.elixir_ls

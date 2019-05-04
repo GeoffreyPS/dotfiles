@@ -1,0 +1,10 @@
+[color]
+	ui = true
+[user]
+	name = GeoffreyPS
+	email = geoffreyps@gmail.com
+[push]
+	default = simple
+[core]
+	editor = emacs
+	excludesfile = /Users/Geoff/.gitignore_global
