@@ -104,3 +104,7 @@ export PATH="/Applications/Postgres.app/Contents/Versions/latest/bin:$PATH"
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 export PATH="/usr/local/opt/postgresql@10/bin:$PATH"
 export PATH="Users/Geoff/.mix/escripts:$PATH"
+
+
+export AWS_ACCESS_KEY_ID=AKIAZQU2SSNZGSZNQ2ON
+export AWS_SECRET_ACCESS_KEY=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
