@@ -85,6 +85,8 @@ source $ZSH/oh-my-zsh.sh
 
 export EDITOR="emacs"
 
+[[ $EMACS = t ]] && unsetopt zle
+
 # add rust
 export PATH=$HOME/.cargo/bin:$PATH
 
