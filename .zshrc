@@ -53,9 +53,6 @@ plugins=(git)
 
 # User configuration
 
-export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/Geoff/bin"
-# export MANPATH="/usr/local/man:$MANPATH"
-
 source $ZSH/oh-my-zsh.sh
 
 # You may need to manually set your language environment
@@ -82,29 +79,3 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-
-export EDITOR="emacs"
-
-[[ $EMACS = t ]] && unsetopt zle
-
-# add rust
-export PATH=$HOME/.cargo/bin:$PATH
-
-# add asdf to path
-. $HOME/.asdf/asdf.sh
-
-. $HOME/.asdf/completions/asdf.bash
-export PATH="Users/Geoff/mongodb/bin:$PATH"
-export PATH="/usr/local/opt/mongodb@3.4/bin:$PATH"
-
-
-# add postgres
-export PATH="/Applications/Postgres.app/Contents/Versions/latest/bin:$PATH"
-
-export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-export PATH="/usr/local/opt/postgresql@10/bin:$PATH"
-export PATH="Users/Geoff/.mix/escripts:$PATH"
-
-
-export AWS_ACCESS_KEY_ID=AKIAZQU2SSNZGSZNQ2ON
-export AWS_SECRET_ACCESS_KEY=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
