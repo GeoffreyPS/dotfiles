@@ -107,8 +107,12 @@
    `(font-lock-string-face ((,class (:foreground ,green))))
    `(font-lock-doc-face ((,class (:foreground ,green-2))))
    `(font-lock-type-face ((,class (:foreground ,green-3 :weight bold))))
-   `(font-lock-variable-name-face ((,class (:foreground ,blue-light))))
+   `(font-lock-variable-name-face ((,class (:foreground ,default :weight bold))))
    `(font-lock-warning-face ((,class (:foreground ,red))))
+
+
+   ;; elixir
+   `(elixir-atom-face ((,class (:foreground ,blue))))
 
    ;; linum
    `(linum ((,class (:foreground ,grey :background "#353535"))))
