@@ -17,8 +17,8 @@ echo "Linking .spacemacs into ~"
 ln ./.spacemacs ~/.spacemacs
 
 ## put link niflheim theme in the right place
-echo "Linking niflheim theme into ~/emacs.d"
-ln ./niflheim-theme.el ~/emacs.d/niflheim_theme.el
+echo "Linking niflheim theme into ~/.emacs.d"
+ln ./niflheim-theme.el ~/.emacs.d/niflheim_theme.el
 
 
 ## install
