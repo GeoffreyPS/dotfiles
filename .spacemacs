@@ -32,7 +32,11 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(
+   '(go
+     protobuf
+     graphviz
+     sql
+     yaml
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
@@ -47,13 +51,14 @@ This function should only modify configuration layer settings."
 
      dap ;; for elixir lsp
      git
-     helm
+     (helm :variables spacemacs-helm-rg-max-column-number 1024)
      lsp
      multiple-cursors
      org
      osx
      spell-checking
      syntax-checking
+     theming ;; for configuring a color theme for the editor
 
      ;; language / syntax
      (elixir :variables elixir-backend 'lsp)
@@ -63,7 +68,9 @@ This function should only modify configuration layer settings."
      emacs-lisp
      html
      javascript
-     treemacs)
+     treemacs
+     mermaid
+     )
 
 
    ;; List of additional packages that will be installed without being wrapped
@@ -74,7 +81,7 @@ This function should only modify configuration layer settings."
    ;; `dotspacemacs/user-config'. To use a local version of a package, use the
    ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '(helm-rg vterm)
+   dotspacemacs-additional-packages '(helm-rg vterm exec-path-from-shell)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -212,7 +219,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil, *scratch* buffer will be persistent. Things you write down in
    ;; *scratch* buffer will be saved and restored automatically.
-   dotspacemacs-scratch-buffer-persistent nil
+   dotspacemacs-scratch-buffer-persistent true
 
    ;; If non-nil, `kill-buffer' on *scratch* buffer
    ;; will bury it instead of killing.
@@ -225,8 +232,9 @@ It should only modify the values of Spacemacs settings."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(spacemacs-dark
-                         spacemacs-light)
+   dotspacemacs-themes '(spooky-theme
+                         niflheim-theme
+                         )
 
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
    ;; `all-the-icons', `custom', `doom', `vim-powerline' and `vanilla'. The
@@ -516,6 +524,7 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
+  (add-to-list 'custom-theme-load-path "~/.emacs.d/private/themes/spooky-theme.el")
   )
 
 (defun dotspacemacs/user-load ()
@@ -532,13 +541,35 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
+
   ;; Create a buffer-local hook to run elixir-format on save, only when we enable elixir-mode.
+  ;;(add-hook 'elixir-mode-hook
+  ;;(lambda () (add-hook 'before-save-hook 'elixir-format nil t)))
+
   (add-hook 'elixir-mode-hook
             (lambda () (add-hook 'before-save-hook 'elixir-format nil t)))
 
+  ;; point mermaid layer at where mermaid-cli is located (mmdc)
+  (setq ob-mermaid-cli-path "~/.config/yarn/global/node_modules/.bin/mmdc")
+
+
+  ;; add mermaid to org-babel
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((mermaid . t)))
+
   ;; get colors working better
   (setq base16-theme-256-color-source "base16-shell")
+
+  (use-package helm-rg)
+  (use-package vterm)
+  (use-package protobuf-mode)
+  (use-package togetherly)
+  (use-package exec-path-from-shell)
+  (exec-path-from-shell-initialize)
   )
+
+
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
@@ -553,10 +584,12 @@ This function is called at the very end of Spacemacs initialization."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(ansi-color-names-vector
-   ["#7f7f7f" "#b01e1e" "#70a56f" "#da8548" "#7846b5" "#ff5b66" "#7ac1ff" "#aaaaaa"])
+   ["#666666" "#c46671" "#9ac299" "#dfad78" "#c4ace0" "#e587a6" "#91bfe6" "#cccccc"])
  '(custom-safe-themes
-   '("3a352ec8be06fedb9d6efd19a14828c7cc6ca2d2f297742d9ec99c7a610085bd" default))
+   '("66132890ee1f884b4f8e901f0c61c5ed078809626a547dbefbb201f900d03fd8" "cc618ed73f5555e0beb5e82d668aa9e601d4b8e1f8608a8e10658439cf7ba190" "507f2fb63f8105bfc4cfc75f787d5ceae778d0108b1c6c64a88e09c0aeffa0b4" "ea2abd5d15e2417c8b8de73b890027570e6f191721ea47090df70a943c24c654" "3a352ec8be06fedb9d6efd19a14828c7cc6ca2d2f297742d9ec99c7a610085bd" default))
  '(evil-want-Y-yank-to-eol nil)
+ '(global-linum-mode t)
+ '(helm-completion-style 'emacs)
  '(hl-todo-keyword-faces
    '(("TODO" . "#dc752f")
      ("NEXT" . "#dc752f")
@@ -574,12 +607,26 @@ This function is called at the very end of Spacemacs initialization."
      ("XXX+" . "#dc752f")
      ("\\?\\?\\?+" . "#dc752f")))
  '(package-selected-packages
-   '(xterm-color vterm terminal-here shell-pop multi-term eshell-z eshell-prompt-extras esh-help zenburn-theme zen-and-art-theme yasnippet-snippets ws-butler writeroom-mode winum white-sand-theme which-key web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package unfill undo-tree underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme treemacs-projectile treemacs-persp treemacs-magit treemacs-icons-dired toxi-theme toc-org tao-theme tangotango-theme tango-plus-theme tango-2-theme tagedit symon symbol-overlay sunny-day-theme sublime-themes subatomic256-theme subatomic-theme string-inflection spaceline-all-the-icons spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smeargle slime-company slim-mode seti-theme scss-mode sass-mode reverse-theme reveal-in-osx-finder restart-emacs rebecca-theme rainbow-delimiters railscasts-theme purple-haze-theme pug-mode professional-theme prettier-js popwin planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme pcre2el password-generator paradox overseer osx-trash osx-dictionary osx-clipboard orgit organic-green-theme org-superstar org-rich-yank org-projectile org-present org-pomodoro org-mime org-download org-cliplink org-brain open-junk-file omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme ob-elixir nodejs-repl noctilux-theme naquadah-theme nameless mwim mustang-theme move-text monokai-theme monochrome-theme molokai-theme moe-theme modus-vivendi-theme modus-operandi-theme minimal-theme material-theme majapahit-theme magit-svn magit-section magit-gitflow madhat2r-theme lush-theme lsp-ui lsp-origami lorem-ipsum livid-mode link-hint light-soap-theme launchctl kaolin-themes json-navigator json-mode js2-refactor js-doc jbeans-theme jazz-theme ir-black-theme inkpot-theme indent-guide impatient-mode hybrid-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation heroku-theme hemisu-theme helm-xref helm-themes helm-swoop helm-rg helm-purpose helm-projectile helm-org-rifle helm-org helm-mode-manager helm-make helm-lsp helm-ls-git helm-gitignore helm-git-grep helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme google-translate golden-ratio gnuplot gitignore-templates gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gandalf-theme fuzzy forge font-lock+ flyspell-correct-helm flycheck-pos-tip flycheck-package flycheck-elsa flycheck-credo flx-ido flatui-theme flatland-theme farmhouse-theme fancy-battery eziam-theme eyebrowse expand-region exotica-theme evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-collection evil-cleverparens evil-args evil-anzu eval-sexp-fu espresso-theme erlang emr emmet-mode elisp-slime-nav editorconfig dumb-jump dracula-theme dotenv-mode doom-themes django-theme dired-quick-sort diminish devdocs darktooth-theme darkokai-theme darkmine-theme darkburn-theme dap-mode dakrone-theme cyberpunk-theme csv-mode company-web common-lisp-snippets column-enforce-mode color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme clean-aindent-mode chocolate-theme cherry-blossom-theme centered-cursor-mode busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes alchemist aggressive-indent afternoon-theme ace-link ace-jump-helm-line ac-ispell))
+   '(helm-gtags godoctor go-tag go-rename go-impl go-guru go-gen-test go-fill-struct go-eldoc ggtags flycheck-golangci-lint counsel-gtags counsel swiper ivy company-go go-mode helm-ispell floobits togetherly protobuf-mode ob-mermaid graphviz-dot-mode sqlup-mode sql-indent helm-flyspell yaml-mode xterm-color vterm terminal-here shell-pop multi-term eshell-z eshell-prompt-extras esh-help zenburn-theme zen-and-art-theme yasnippet-snippets ws-butler writeroom-mode winum white-sand-theme which-key web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package unfill undo-tree underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme treemacs-projectile treemacs-persp treemacs-magit treemacs-icons-dired toxi-theme toc-org tao-theme tangotango-theme tango-plus-theme tango-2-theme tagedit symon symbol-overlay sunny-day-theme sublime-themes subatomic256-theme subatomic-theme string-inflection spaceline-all-the-icons spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smeargle slime-company slim-mode seti-theme scss-mode sass-mode reverse-theme reveal-in-osx-finder restart-emacs rebecca-theme rainbow-delimiters railscasts-theme purple-haze-theme pug-mode professional-theme prettier-js popwin planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme pcre2el password-generator paradox overseer osx-trash osx-dictionary osx-clipboard orgit organic-green-theme org-superstar org-rich-yank org-projectile org-present org-pomodoro org-mime org-download org-cliplink org-brain open-junk-file omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme ob-elixir nodejs-repl noctilux-theme naquadah-theme nameless mwim mustang-theme move-text monokai-theme monochrome-theme molokai-theme moe-theme modus-vivendi-theme modus-operandi-theme minimal-theme material-theme majapahit-theme magit-svn magit-section magit-gitflow madhat2r-theme lush-theme lsp-ui lsp-origami lorem-ipsum livid-mode link-hint light-soap-theme launchctl kaolin-themes json-navigator json-mode js2-refactor js-doc jbeans-theme jazz-theme ir-black-theme inkpot-theme indent-guide impatient-mode hybrid-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation heroku-theme hemisu-theme helm-xref helm-themes helm-swoop helm-purpose helm-projectile helm-org-rifle helm-org helm-mode-manager helm-make helm-lsp helm-ls-git helm-gitignore helm-git-grep helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme google-translate golden-ratio gnuplot gitignore-templates gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gandalf-theme fuzzy forge font-lock+ flyspell-correct-helm flycheck-pos-tip flycheck-package flycheck-elsa flycheck-credo flx-ido flatui-theme flatland-theme farmhouse-theme fancy-battery eziam-theme eyebrowse expand-region exotica-theme evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-collection evil-cleverparens evil-args evil-anzu eval-sexp-fu espresso-theme erlang emr emmet-mode elisp-slime-nav editorconfig dumb-jump dracula-theme dotenv-mode doom-themes django-theme dired-quick-sort diminish devdocs darktooth-theme darkokai-theme darkmine-theme darkburn-theme dap-mode dakrone-theme cyberpunk-theme csv-mode company-web common-lisp-snippets column-enforce-mode color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme clean-aindent-mode chocolate-theme cherry-blossom-theme centered-cursor-mode busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes alchemist aggressive-indent afternoon-theme ace-link ace-jump-helm-line ac-ispell))
  '(pdf-view-midnight-colors '("#655370" . "#fbf8ef")))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:background nil)))))
+ '(default ((t (:background nil))))
+ '(font-lock-comment-face ((t (:background "gray16" :foreground "gray40" :slant normal))))
+ '(font-lock-constant-face ((t (:foreground "SteelBlue1" :weight semi-bold))))
+ '(font-lock-preprocessor-face ((t (:foreground "#BF3646"))))
+ '(font-lock-string-face ((t (:foreground "#7AB979"))))
+ '(highlight-parentheses-highlight ((nil (:weight ultra-bold))) t)
+ '(magit-branch-local ((t (:inherit bold :background "#293239" :foreground "#B58FE0"))))
+ '(magit-branch-remote ((t (:inherit bold :background "#293235" :foreground "#7AB979"))))
+ '(magit-hash ((t (:foreground "#c46671"))))
+ '(magit-section-heading ((t (:inherit bold :extend t :foreground "#dfad78"))))
+ '(minibuffer-prompt ((t (:inherit bold :foreground "#aaaaaa" :weight bold))))
+ '(rainbow-delimiters-depth-1-face ((t (:foreground "#666666"))))
+ '(rainbow-delimiters-depth-2-face ((t (:foreground "#E79946"))))
+ '(sh-heredoc ((t (:foreground "#dfad78" :weight bold))))
+ '(spacemacs-transient-state-title-face ((t (:inherit bold :foreground "#c4ace0" :box nil)))))
 )
