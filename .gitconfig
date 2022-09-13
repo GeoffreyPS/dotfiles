@@ -8,3 +8,7 @@
 [core]
 	editor = emacs
 	excludesfile = /Users/Geoff/.gitignore_global
+[pull]
+	rebase = false
+[init]
+	defaultBranch = main

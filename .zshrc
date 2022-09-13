@@ -79,3 +79,7 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+## Uncomment if you need to ensure ssh key is added to shell session.
+## Requires password entry on each new shell
+# ssh-add ~/.ssh/gsmith.rsa
+ssh-add ~/.ssh/id_ed25519_gitlab_geoff

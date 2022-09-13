@@ -1,7 +1,7 @@
 ### Emacs
 \#*\#
 .\#*
-*-emacs-elixir-format.ex
+*-emacs-elixir-format.ex*
 
 ### OSX
 *.DS_Store
@@ -10,7 +10,6 @@
 ### VS Code
 .elixir_ls
 .vscode/
-
 
 ### asdf
 .tool-versions
