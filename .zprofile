@@ -8,11 +8,17 @@ export EDITOR="emacsclient -nc"
 
 ## add installed binaries to path
 
+
 export PATH="/usr/local/bin:$PATH"
 export PATH="/usr/local/sbin:$PATH"
 
+## add local binaries
+. $HOME/bin
+
 ## Enable elixir/erlang shell history:
 export ERL_AFLAGS="-kernel shell_history enabled"
+export KERL_BUILD_DOCS=yes
+
 
 export KERL_CONFIGURE_OPTIONS="--disable-debug --without-javac --with-ssl=$(brew --prefix openssl@1.1) --with-wx-config=/usr/local/bin/wx-config"
 export KERL_BUILD_DOCS=yes
@@ -55,3 +61,6 @@ function check_vars ()
         grep --color -q $e ../deploy-configs/mesos-configs/$(basename $PWD).yml || echo $e missing;
     done
 }
+=======
+export PATH="$HOME/.mix/escripts:$PATH"
+>>>>>>> Stashed changes
